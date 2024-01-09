@@ -35,11 +35,18 @@ function moduleProject2() {
       let square = document.createElement('div')
       square.classList.add('square')
       row.appendChild(square)
-      square.addEventListener('click', () => {
+      square.addEventListener('click', (evt) => {
         // 👉 TASK 2 - Use a click handler to target a square 👈
+        if(!square.classList.contains('targeted')){
+          document.querySelector('.targeted').classList.remove('targeted')
+        }
+
+        square.classList.add('targeted')
+        
       })
     }
   }
+  
   document.querySelector('.row:nth-child(3)')
     .children[2].classList.add('targeted') // Initial square being targeted
 
@@ -64,11 +71,89 @@ function moduleProject2() {
   })
 
   document.addEventListener('keydown', evt => {
+    console.log(evt.key)
     // 👉 TASK 3 - Use the arrow keys to highlight a new square 👈
+    let isDown = evt.key === keys.down
+    let isUp = evt.key === keys.up
+    let isLeft = evt.key === keys.left
+    let isRight = evt.key === keys.right
+    let isSpace = evt.key === keys.space
+
+    let targeted = document.querySelector('.targeted')
+
+    if (isDown){
+      if(targeted.parentElement.nextElementSibling){
+        let idx = Array.from(targeted.parentElement.children).indexOf(targeted)
+         
+        targeted.classList.remove('targeted')
+
+        targeted.parentElement.nextElementSibling.children[idx].classList.add('targeted')
+        console.log('can go down')
+      }
+     console.log('you clicked Down')
+    }
+
+    else if (isUp){
+      if(targeted.parentElement.previousElementSibling){
+        let idx = Array.from(targeted.parentElement.children).indexOf(targeted)
+         
+        targeted.classList.remove('targeted')
+
+        targeted.parentElement.previousElementSibling.children[idx].classList.add('targeted')
+      console.log('you clicked Up')
+    }}
+    
+    else if (isLeft){
+      if (targeted.previousElementSibling) {
+        targeted.classList.remove('targeted')
+        targeted.previousElementSibling.classList.add('targeted')
+        console.log('can go left')
+      }
+      console.log('you clicked Left')
+    }
+    
+    else if (isRight){
+      if (targeted.nextElementSibling) {
+        targeted.classList.remove('targeted')
+        targeted.nextElementSibling.classList.add('targeted')
+        console.log('can go right')
+      }
+      console.log('you clicked Right')
+    }
 
     // 👉 TASK 4 - Use the space bar to exterminate a mosquito 👈
+      else if (isSpace) {
+        let mosquito = targeted.firstChild
+        
+        if (mosquito && mosquito.dataset.status === 'alive') {
+          mosquito.dataset.status = 'dead'
+          mosquito.parentElement.style.backgroundColor = 'red'
+        }
+        console.log(mosquito)
+       
+      }
+// 👉 TASK 5 - End the game 👈
+ let liveMosquitos = document.querySelectorAll('[data-status=alive]')
+ if (!liveMosquitos.length) {
+  let elapsed = getTimeElapsed()
+  document.querySelector('p.info').textContent = 
+  `Extermination completed in ${elapsed / 1000} seconds!`
+  console.log('game over')
+ 
+  let restartbtn = document.createElement('button')
+ restartbtn.textContent = 'restart'
+ restartbtn.addEventListener('click', () => {
+  location.reload()
+  }) 
+ document.querySelector('h2').insertAdjacentElement("beforeend", restartbtn)
 
-    // 👉 TASK 5 - End the game 👈
+}
+ 
+
+
+
+
+
   })
   // 👆 WORK WORK ABOVE THIS LINE 👆
 }
